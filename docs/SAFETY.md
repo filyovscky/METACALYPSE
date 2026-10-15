@@ -1,22 +1,24 @@
-# Форматы и безопасность
+# Formats and safety
 
-METACALYPSE создаёт копию рядом с оригиналом. Временная копия удаляется при ошибке; `_partial` сохраняется для ручной проверки. Оригинал не меняется, если явно не указан параметр `-InPlace`. Этот параметр заменяет оригинал только после проверок и сравнения SHA-256, поэтому используйте его лишь при наличии резервной копии.
+[Русская версия](SAFETY.ru.md)
 
-| Форматы | Очистка и проверка |
+METACALYPSE creates a sibling copy. Temporary copies are removed on failure; `_partial` copies are kept for manual review. Originals stay untouched unless `-InPlace` is explicitly supplied. That option replaces an original only after verification and a SHA-256 comparison; use it only with a backup.
+
+| Formats | Cleaning and verification |
 | --- | --- |
-| DOCX, DOCM, DOTX, DOTM, XLSX, XLSM, XLTX, XLTM, PPTX, PPTM, POTX, POTM | Удаляются стандартные части `docProps` и миниатюра. Остальные части пакета сверяются по SHA-256; вложенные изображения проверяются на метаданные, но не изменяются. Word/Excel/PowerPoint не запускаются. |
-| JPG, JPEG, PNG, WebP, GIF, TIF, TIFF, HEIC, HEIF, AVIF, MP3, WAV, MP4, MOV, M4V, M4A | ExifTool удаляет доступные для записи поля. После обработки повторно читаются теги и сверяются тип файла, размеры изображения и длительность. ICC-профиль изображений сохраняется. |
+| DOCX, DOCM, DOTX, DOTM, XLSX, XLSM, XLTX, XLTM, PPTX, PPTM, POTX, POTM | Removes standard `docProps` parts and thumbnails. Other package parts are compared by SHA-256. Embedded images are checked for metadata but not modified. Office applications are not launched. |
+| JPG, JPEG, PNG, WebP, GIF, TIF, TIFF, HEIC, HEIF, AVIF, MP3, WAV, MP4, MOV, M4V, M4A | ExifTool removes writable metadata. Tags are read again, and file type, image dimensions, and duration are checked. Image ICC profiles are preserved. |
 
-Поддержка записи конкретного медиаформата зависит от ExifTool. Обязательные служебные поля контейнера, особенно у видео, могут остаться; тогда выводится `PARTIAL`. `OK` означает лишь успешное прохождение перечисленных проверок, не криптографическую или криминалистическую анонимность.
+ExifTool write support varies by format. Required container fields, especially in video, can remain; such files are marked `PARTIAL`. `OK` only means the listed checks passed, not forensic anonymity.
 
-Не очищаются текст и видимое содержимое документа, комментарии, история правок, скрытые листы/слайды, вложенные файлы, метаданные внутри вложенных изображений и следы в пикселях или кадрах. Метаданные могут появиться снова после повторного сохранения в Office. Старые двоичные форматы Office и PDF не поддерживаются, чтобы не менять структуру документов без безопасной проверки.
+The tool does **not** remove document text, visible content, comments, revision history, hidden sheets or slides, embedded files, metadata inside embedded images, or traces in pixels and frames. Office may write new properties if you save a cleaned file again. Legacy binary Office formats and PDF are unsupported rather than modified without a safe verifier.
 
-Закройте файлы в Office перед очисткой. Если файл открыт на запись, скрипт откажется делать потенциально неполную копию. При обработке папки уже созданные `_clean` и `_partial` результаты пропускаются. Имена удалённых полей показываются без прежних значений, но пути к файлам попадают в локальный лог.
+Close files in Office before cleaning. A file opened for writing is not copied, to avoid an incomplete snapshot. When processing a folder, existing `_clean` and `_partial` outputs are skipped. Logs include file paths but list removed field names without their old values.
 
-На Windows поддержаны PowerShell 5.1/7 и меню Проводника. CLI рассчитан на PowerShell 7 под macOS и Linux; интеграции с файловыми менеджерами там нет. Если ExifTool вне `PATH`, создайте рядом со скриптом локальный файл `config.local.json`:
+Windows supports PowerShell 5.1/7 and File Explorer integration. The CLI is designed for PowerShell 7 on macOS and Linux, but those systems were not runtime-tested for this release. No file-manager integration is provided there. If ExifTool is not in `PATH`, create a local `config.local.json` beside the script:
 
 ```json
 { "exiftoolPath": "/absolute/path/to/exiftool" }
 ```
 
-В Windows используйте абсолютный путь к `exiftool.exe` с экранированными обратными слешами. Файл конфигурации исключён из Git. Windows-ошибки запуска меню записываются в `METACALYPSE-launch-error.log` во временной папке системы.
+On Windows, use an absolute path to `exiftool.exe` with escaped backslashes. The local config is excluded from Git. Windows context-menu launch errors are written to `METACALYPSE-launch-error.log` in the system temporary directory.
