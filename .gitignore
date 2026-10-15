@@ -1,0 +1,45 @@
+# Machine-specific configuration and third-party binaries
+config.local.json
+exiftool.exe
+exiftool
+exiftool_files/
+
+# Output, logs, and unfinished local work
+*.log
+.metacalypse-*
+.killmetadata-*
+*_clean.*
+*_clean-[0-9]*.*
+*_partial.*
+*_partial-[0-9]*.*
+
+# Do not accidentally publish documents or media used for testing
+*.doc
+*.docx
+*.docm
+*.dot
+*.dotx
+*.dotm
+*.xls
+*.xlsx
+*.xlsm
+*.ppt
+*.pptx
+*.pptm
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.tif
+*.tiff
+*.heic
+*.heif
+*.avif
+*.mp3
+*.wav
+*.mp4
+*.mov
+*.m4v
+*.m4a
