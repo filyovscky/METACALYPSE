@@ -6,17 +6,30 @@
 
 Очистка метаданных Office-документов и медиафайлов перед отправкой. По умолчанию исходник **не меняется**: рядом появляется `имя_clean.ext` либо `имя_partial.ext`, если проверка нашла оставшиеся данные.
 
-## Быстрый старт
+## Windows: установка и запуск
 
-**Windows:** скачайте и распакуйте проект в постоянную папку. Для обработки фото, аудио и видео установите [ExifTool](https://exiftool.org/) в `PATH`; без него работают только Office-документы. Дважды щёлкните `install-context-menu.bat`. После этого выделите файлы в Проводнике, нажмите **ПКМ -> METACALYPSE - Clean metadata (copy)**. В Windows 11 сначала может потребоваться **Показать дополнительные параметры**. Для папки пункт называется **METACALYPSE - Clean metadata (copies)**. Несколько выбранных файлов обрабатываются по очереди в одном окне. Удаление пункта меню: `uninstall-context-menu.bat`.
+1. [Скачайте ZIP проекта](https://github.com/filyovscky/METACALYPSE/archive/refs/heads/main.zip) и распакуйте в постоянную папку. Если установлен Git, можно выполнить `git clone https://github.com/filyovscky/METACALYPSE.git`.
+2. **Для фото, аудио и видео:** [скачайте ExifTool для Windows](https://exiftool.org/). Распакуйте архив, переименуйте `exiftool(-k).exe` в `exiftool.exe` и положите этот файл **вместе с папкой** `exiftool_files` рядом с `metacalypse.ps1`. Свойства Office можно очистить без ExifTool, но проверка вложенных изображений тогда может дать статус `PARTIAL`.
+3. Дважды щёлкните `install-context-menu.bat` в папке проекта. Права администратора не нужны.
+4. Выделите файлы в Проводнике, нажмите ПКМ и выберите **METACALYPSE - Clean metadata (copy)**. В Windows 11 сначала может понадобиться **Показать дополнительные параметры**. Для папки выберите **METACALYPSE - Clean metadata (copies)**. Несколько файлов обрабатываются по очереди в одном окне, очищенные копии появляются рядом с исходниками.
 
-**macOS / Linux / Windows CLI:** нужны PowerShell 7 (`pwsh`) и ExifTool в `PATH` для медиа. Запускайте из папки проекта:
+Чтобы убрать пункт меню, запустите `uninstall-context-menu.bat`. Если переместили папку проекта, запустите установщик снова. Без меню можно перетащить файлы на `metacalypse.bat` или выполнить:
 
 ```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\metacalypse.ps1 -TargetPaths 'C:\path\file.docx'
+```
+
+## macOS / Linux: командная строка
+
+1. [Скачайте ZIP проекта](https://github.com/filyovscky/METACALYPSE/archive/refs/heads/main.zip) и распакуйте его либо выполните `git clone https://github.com/filyovscky/METACALYPSE.git`.
+2. Установите [PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell). Для медиа также установите [ExifTool](https://exiftool.org/install.html), чтобы команда `exiftool` была доступна через `PATH`.
+3. Откройте терминал в папке проекта и выполните:
+
+```sh
 pwsh -NoProfile -File ./metacalypse.ps1 -TargetPaths '/path/to/file.docx' '/path/to/photo.jpg'
 ```
 
-На Windows без `pwsh` можно использовать `metacalypse.bat` или `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\metacalypse.ps1 -TargetPaths 'C:\path\file.docx'`. Меню Проводника доступно только на Windows. Папку проекта после установки меню не перемещайте без повторной установки.
+Интеграция с меню файлового менеджера есть только в Windows.
 
 Поддерживаются современные Office Open XML (`DOCX`, `XLSX`, `PPTX` и шаблоны/макросные варианты), изображения `JPG`, `PNG`, `WebP`, `GIF`, `TIFF`, `HEIC`, `HEIF`, `AVIF`, аудио `MP3`, `WAV`, `M4A` и видео `MP4`, `MOV`, `M4V`. Старые `DOC`/`XLS`/`PPT` и PDF не изменяются. [Форматы и ограничения](docs/SAFETY.ru.md).
 

@@ -6,17 +6,30 @@
 
 Remove metadata from Office documents and media before sharing them. By default, originals stay untouched: METACALYPSE creates a sibling `name_clean.ext` file, or `name_partial.ext` if some metadata may remain.
 
-## Quick start
+## Windows: install and use
 
-**Windows:** download and extract the project to a permanent folder. Install [ExifTool](https://exiftool.org/) in `PATH` to process images, audio, and video; Office files work without it. Double-click `install-context-menu.bat`. Then select files in File Explorer and choose **right-click -> METACALYPSE - Clean metadata (copy)**. On Windows 11, first choose **Show more options** if the entry is not visible. For folders, the entry is **METACALYPSE - Clean metadata (copies)**. Multiple selected files run sequentially in one PowerShell window. To remove the menu entry, run `uninstall-context-menu.bat`.
+1. [Download the project ZIP](https://github.com/filyovscky/METACALYPSE/archive/refs/heads/main.zip) and extract it to a permanent folder. Or, if Git is installed, run `git clone https://github.com/filyovscky/METACALYPSE.git`.
+2. **For images, audio, and video:** [download ExifTool for Windows](https://exiftool.org/). Extract its ZIP, rename `exiftool(-k).exe` to `exiftool.exe`, and place that file **and** the `exiftool_files` folder beside `metacalypse.ps1`. Office properties can be cleaned without ExifTool, but embedded-image checks may then report `PARTIAL`.
+3. Double-click `install-context-menu.bat` in the project folder. Administrator rights are not required.
+4. Select files in File Explorer, right-click, and choose **METACALYPSE - Clean metadata (copy)**. On Windows 11, choose **Show more options** first if needed. For a folder, choose **METACALYPSE - Clean metadata (copies)**. Multiple files run sequentially in one PowerShell window; cleaned copies appear beside the originals.
 
-**macOS / Linux / Windows CLI:** install PowerShell 7 (`pwsh`) and ExifTool for media, then run from the project folder:
+To remove the menu entry, double-click `uninstall-context-menu.bat`. If you move the project folder, run the installer again. To run without the menu, drag files onto `metacalypse.bat` or use:
 
 ```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\metacalypse.ps1 -TargetPaths 'C:\path\file.docx'
+```
+
+## macOS / Linux: command line
+
+1. [Download the project ZIP](https://github.com/filyovscky/METACALYPSE/archive/refs/heads/main.zip) and extract it, or run `git clone https://github.com/filyovscky/METACALYPSE.git`.
+2. Install [PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/install/install-powershell). For media, also install [ExifTool](https://exiftool.org/install.html) so `exiftool` is on `PATH`.
+3. Open a terminal in the project folder and run:
+
+```sh
 pwsh -NoProfile -File ./metacalypse.ps1 -TargetPaths '/path/to/file.docx' '/path/to/photo.jpg'
 ```
 
-On Windows without `pwsh`, use `metacalypse.bat` or `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\metacalypse.ps1 -TargetPaths 'C:\path\file.docx'`. File Explorer integration is Windows-only. If you move the project folder, reinstall the context-menu entry.
+File-manager context menus are supported on Windows only.
 
 Supported: modern Office Open XML files (`DOCX`, `XLSX`, `PPTX`, including macro-enabled files and templates), `JPG`, `PNG`, `WebP`, `GIF`, `TIFF`, `HEIC`, `HEIF`, `AVIF`, `MP3`, `WAV`, `M4A`, `MP4`, `MOV`, and `M4V`. Legacy Office formats and PDF are skipped. [Formats and limitations](docs/SAFETY.md).
 
